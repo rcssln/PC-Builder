@@ -1,0 +1,111 @@
+/* ==========================================================================
+   builder.css - PC Builder page: build settings bar, slot list, component
+   picker, sidebar and the virtual PC diagram.
+   ========================================================================== */
+
+.build-bar {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.4fr) repeat(3, minmax(130px, 0.7fr)) auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+.build-bar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.builder-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 330px;
+  gap: 18px;
+  align-items: start;
+}
+
+/* ---------- Slot list ---------- */
+
+.slots { display: flex; flex-direction: column; gap: 8px; }
+.slot {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.slot:hover { border-color: var(--border-strong); }
+.slot.active { border-color: var(--accent); background: var(--accent-soft); }
+.slot-img { width: 52px; height: 40px; display: grid; place-items: center; border-radius: 4px; background: var(--surface-2); }
+.slot-img img { width: 46px; height: 34px; object-fit: contain; }
+.slot.empty .slot-img img { opacity: 0.35; filter: grayscale(1); }
+.slot-label { font-size: 0.76rem; font-weight: 600; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.slot-name { font-size: 0.86rem; font-weight: 600; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.slot.empty .slot-name { color: var(--muted); font-weight: 500; }
+.slot-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.slot-price { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.status-dot.ok { background: var(--ok); }
+.status-dot.warn { background: var(--warn); }
+.status-dot.error { background: var(--error); }
+.status-dot.none { background: #c3c9d2; }
+.slot-drives { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 4px; }
+.drive-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.8rem; padding: 5px 8px; border-radius: 4px; background: var(--surface-2); }
+.drive-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- Picker ---------- */
+
+.picker-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.picker-head h2 { margin: 0; font-size: 1.2rem; }
+.filters {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.5fr) minmax(120px, 1fr) minmax(130px, 1fr) minmax(120px, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.filter-row2 { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; font-size: 0.85rem; }
+.price-range { display: flex; align-items: center; gap: 10px; min-width: 240px; flex: 1; max-width: 380px; }
+.price-range output { font-size: 0.82rem; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-2); min-width: 64px; text-align: right; }
+.result-count { color: var(--muted); font-size: 0.84rem; }
+
+/* ---------- Sidebar ---------- */
+
+.sidebar { position: sticky; top: calc(var(--header-h) + 14px); display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - var(--header-h) - 28px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
+.sidebar .card { padding: 16px; }
+.sidebar h3 { font-size: 0.95rem; margin-bottom: 10px; }
+.total-big { font-size: 1.9rem; font-weight: 700; line-height: 1.15; }
+.budget-line { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+.issue-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.issue { display: flex; gap: 8px; font-size: 0.82rem; line-height: 1.35; align-items: flex-start; }
+.issue .status-dot { margin-top: 5px; }
+
+.rec-item { padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #fff; }
+.rec-item + .rec-item { margin-top: 8px; }
+.rec-item.top { border-color: var(--accent); }
+.rec-top { font-size: 0.74rem; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
+.rec-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.rec-name { font-size: 0.86rem; font-weight: 600; line-height: 1.3; }
+.rec-score { font-size: 0.76rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rec-reasons { margin: 6px 0 8px; padding-left: 16px; font-size: 0.8rem; color: var(--text-2); }
+.rec-reasons li + li { margin-top: 2px; }
+.rec-reasons .rec-warning { color: var(--warn); }
+.rec-delta { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; }
+
+/* ---------- Virtual PC ---------- */
+
+.vpc { width: 100%; height: auto; display: block; }
+.vpc .vp { fill: #f7f8fa; stroke: #b8c0cc; stroke-width: 1.5; stroke-dasharray: 5 4; transition: fill 0.2s, stroke 0.2s; }
+.vpc .vp-label { fill: #8a93a1; font: 600 9px var(--font); pointer-events: none; }
+.vpc .filled .vp { stroke-dasharray: none; }
+.vpc .filled.ok .vp { fill: #e3eefb; stroke: var(--accent); }
+.vpc .filled.warn .vp { fill: #fbecd3; stroke: var(--warn); }
+.vpc .filled.error .vp { fill: #fadad6; stroke: var(--error); }
+.vpc .filled .vp-label { fill: var(--text); }
+.vpc g[data-cat] { cursor: pointer; }
+.vpc g[data-cat]:hover .vp { stroke-width: 2.5; }
+.vpc .fan { fill: none; stroke: #c3c9d2; stroke-width: 1.5; }
+.vpc-legend { display: flex; gap: 12px; justify-content: center; font-size: 0.76rem; color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
+.vpc-legend span { display: inline-flex; align-items: center; gap: 4px; }
+
+.autofill-log { font-size: 0.86rem; padding-left: 18px; }
+.autofill-log li + li { margin-top: 6px; }

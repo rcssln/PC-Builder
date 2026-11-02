@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Project information, methodology and data sources.">
+  <title>About · Digital PC Builder</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="about" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">About the project</div>
+          <h1>Digital PC Builder</h1>
+          <p>A web-based virtual compatibility and simulation system that helps beginners, students, enthusiasts and retailers plan PC builds without costly mistakes.</p>
+        </div>
+        
+      </div>
+      <div class="grid grid-2">
+        <section class="card">
+          <h3>Project goals</h3>
+          <ul class="small">
+            <li>Prevent incompatible purchases with automated, explained compatibility checks.</li>
+            <li>Help users stay within budget with transparent, usage-aware recommendations.</li>
+            <li>Give realistic expectations through clearly labeled performance and power estimates.</li>
+            <li>Make comparing parts and complete builds simple and visual.</li>
+          </ul>
+          <h3 style="margin-top:18px">Technology</h3>
+          <ul class="small">
+            <li><strong>Frontend:</strong> HTML5, CSS3 and vanilla JavaScript (ES6), with no build tools.</li>
+            <li><strong>Backend:</strong> PHP REST endpoints (<code>backend/api</code>) with PDO.</li>
+            <li><strong>Database:</strong> MySQL / MariaDB (<code>backend/database.sql</code>).</li>
+            <li><strong>Fallback:</strong> without the backend, the catalog loads from <code>data/components.json</code> and builds are kept in localStorage.</li>
+            <li><strong>Charts:</strong> Chart.js via CDN, with a built-in CSS fallback when offline.</li>
+          </ul>
+        </section>
+        <section class="card">
+          <h3>System status</h3>
+          <dl class="kv" id="about-status"></dl>
+          <h3 style="margin-top:18px">Important disclaimers</h3>
+          <p class="notice">Prices are in <strong>Philippine pesos</strong>, taken from public listings at DynaQuest PC, PC Express and EasyPC on 2 November 2026 (in stock, out of stock, or estimated where no listing existed). They are not live prices. Performance indices, FPS ranges, utilization and power figures are
+            <strong>model-based approximations</strong>, not measured benchmark results. Product images are generic category illustrations.</p>
+        </section>
+      </div>
+
+      <section class="card" style="margin-top:18px">
+        <h3>Hardware dataset</h3>
+        <div class="table-wrap" id="about-dataset"></div>
+      </section>
+
+      <div class="grid grid-2" style="margin-top:18px">
+        <section class="card">
+          <h3>Compatibility rules</h3>
+          <ol class="small">
+            <li><strong>Socket:</strong> CPU socket must equal motherboard socket; flags boards that may need a BIOS update for newer CPU generations.</li>
+            <li><strong>Memory:</strong> RAM generation (DDR4/DDR5) must match the board; module count, capacity and rated speed are checked against board limits.</li>
+            <li><strong>Form factor:</strong> the case must list the motherboard form factor (E-ATX, ATX, Micro-ATX, Mini-ITX).</li>
+            <li><strong>GPU clearance:</strong> GPU length vs. case maximum; under 15 mm spare is a warning.</li>
+            <li><strong>Cooler:</strong> socket support, rated capacity vs. CPU TDP and peak power, air-cooler height or radiator size vs. case.</li>
+            <li><strong>Power:</strong> estimated peak draw vs. PSU wattage, recommended PSU (peak × 1.3, rounded up to 50 W, at least the GPU vendor's recommendation), 16-pin connector and PSU form factor.</li>
+            <li><strong>Storage:</strong> M.2 slot and SATA port counts, PCIe generation, and 2.5"/3.5" drive bays.</li>
+          </ol>
+        </section>
+        <section class="card">
+          <h3>Estimation model</h3>
+          <ul class="small">
+            <li>Each CPU has relative <em>single-core</em>, <em>multi-core</em> and <em>gaming</em> indices; each GPU has <em>raster</em> and <em>ray-tracing</em> indices (normalized from general public benchmark trends).</li>
+            <li><strong>Gaming FPS</strong> = min(CPU frame capacity, GPU frame capacity). CPU capacity = gaming index × 2.0 × RAM factor; GPU capacity = GPU index × resolution factor (1080p 2.4, 1440p 1.75, 4K 0.95) × preset factor. Shown as a range of −15% to +12%.</li>
+            <li><strong>Bottleneck</strong> = the gap between CPU and GPU capacity. GPU-bound is normal; CPU-bound above 20% is flagged.</li>
+            <li><strong>Workload scores</strong> are weighted sums of CPU, GPU, RAM and storage factors, normalized so a reference build scores 100.</li>
+            <li><strong>Recommendations</strong> score compatible candidates by usage fitness (50%), budget fit (30%) and value (20%), and list the reasons behind each pick.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/about.js"></script>
+</body>
+</html>

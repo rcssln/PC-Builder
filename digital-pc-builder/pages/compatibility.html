@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Automated hardware compatibility report with explanations.">
+  <title>Compatibility Checker · Digital PC Builder</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="compatibility" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Compatibility Checker</div>
+          <h1>Compatibility report</h1>
+          <p>Each rule reads the compatibility attributes stored with the components and explains every result. Green = compatible, yellow = potential issue, red = incompatible.</p>
+        </div>
+        <label class="field" style="min-width:260px"><span>Build to check</span><select id="cc-source"><option value="current">Current build</option></select></label>
+      </div>
+      <section class="card" id="cc-summary"></section>
+
+      <div class="grid grid-2" style="margin-top:18px" id="cc-rules"></div>
+
+      <div class="grid grid-2" style="margin-top:18px">
+        <section class="card">
+          <div class="card-head"><h3>Power calculation</h3><span class="tag-estimate">Estimate</span></div>
+          <div class="table-wrap" id="cc-power"></div>
+        </section>
+        <section class="card">
+          <h3>Quick pair checker</h3>
+          <p class="small muted">Test any two parts against each other without changing your build.</p>
+          <div class="form-grid">
+            <label class="field"><span>Pair to check</span><select id="qp-pair"></select></label>
+            <label class="field"><span id="qp-a-label">Part A</span><select id="qp-a"></select></label>
+            <label class="field"><span id="qp-b-label">Part B</span><select id="qp-b"></select></label>
+          </div>
+          <div id="qp-result" style="margin-top:14px"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/compatibility-page.js"></script>
+</body>
+</html>

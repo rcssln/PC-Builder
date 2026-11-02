@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Builder · Digital PC Builder</title>
+  <meta name="description" content="Choose PC components and check compatibility, power and cost as you build.">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/builder.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="builder" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Interactive PC Builder</div>
+          <h1>Build your PC</h1>
+          <p>Pick a part for each slot. Compatibility, power, price and recommendations update instantly as you build.</p>
+        </div>
+        <div id="editing-note" class="small muted"></div>
+      </div>
+
+      <!-- Build settings -->
+      <section class="card build-bar" aria-label="Build settings">
+        <label class="field"><span>Build name</span><input type="text" id="build-name" maxlength="100"></label>
+        <label class="field"><span>Intended usage</span><select id="build-usage"></select></label>
+        <label class="field"><span>Budget (PHP)</span><input type="number" id="build-budget" min="0" max="10000000" step="1000"></label>
+        <label class="field"><span>Gaming resolution</span><select id="build-resolution"></select></label>
+        <div class="actions">
+          <button class="btn btn-secondary" id="btn-autofill" title="Fill empty slots with recommended parts">Auto-complete</button>
+          <button class="btn btn-primary" id="btn-save">Save build</button>
+          <button class="btn btn-danger" id="btn-clear">Clear</button>
+        </div>
+      </section>
+
+      <div class="builder-layout">
+        <!-- Selected parts -->
+        <section aria-label="Selected components">
+          <div class="row-between" style="margin-bottom:10px">
+            <h3 style="margin:0">Your components</h3>
+            <span class="small muted" id="slot-count"></span>
+          </div>
+          <div class="slots" id="slots"></div>
+          <div class="row" style="margin-top:12px">
+            <a class="btn btn-sm btn-ghost" href="summary.html">View summary</a>
+            <a class="btn btn-sm btn-ghost" href="simulator.html">Simulate</a>
+          </div>
+        </section>
+
+        <!-- Component picker -->
+        <section aria-label="Component picker">
+          <div class="picker-head">
+            <h2 id="picker-title">Choose a CPU</h2>
+            <span class="result-count" id="result-count"></span>
+          </div>
+          <div class="filters">
+            <input type="search" id="f-search" placeholder="Search name, brand or spec (e.g. AM5, 16 GB)" aria-label="Search components">
+            <select id="f-brand" aria-label="Filter by brand"></select>
+            <select id="f-sort" aria-label="Sort"></select>
+            <select id="f-compat" aria-label="Compatibility filter">
+              <option value="all">All parts</option>
+              <option value="compatible">Compatible only</option>
+              <option value="ok">No warnings only</option>
+            </select>
+          </div>
+          <div class="filter-row2">
+            <div class="price-range">
+              <span class="small muted">Max price</span>
+              <input type="range" id="f-price" min="0" max="10000" step="100" aria-label="Maximum price">
+              <output id="f-price-out"></output>
+            </div>
+            <button class="btn btn-sm btn-ghost" id="f-reset">Reset filters</button>
+          </div>
+          <div class="part-grid" id="picker-grid"></div>
+          <div id="picker-pager"></div>
+        </section>
+
+        <!-- Live sidebar -->
+        <aside class="sidebar" aria-label="Build status">
+          <div class="card">
+            <h3>Virtual PC</h3>
+            <div id="vpc"></div>
+            <div class="vpc-legend">
+              <span><i class="status-dot none"></i>Empty</span>
+              <span><i class="status-dot ok"></i>OK</span>
+              <span><i class="status-dot warn"></i>Warning</span>
+              <span><i class="status-dot error"></i>Conflict</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="row-between"><h3 style="margin:0">Estimated total</h3><span class="tag-estimate">Prices as of 2 Nov 2026</span></div>
+            <div class="total-big" id="sb-total">$0</div>
+            <div id="sb-budget"></div>
+            <hr>
+            <dl class="kv" id="sb-power"></dl>
+          </div>
+          <div class="card">
+            <div class="row-between"><h3 style="margin:0">Compatibility</h3><span id="sb-compat-badge"></span></div>
+            <div class="issue-list" id="sb-issues"></div>
+            <a class="small" href="compatibility.html" style="display:inline-block;margin-top:10px">Full compatibility report</a>
+          </div>
+          <div class="card">
+            <h3 id="sb-rec-title">Recommended</h3>
+            <div id="sb-recs"></div>
+          </div>
+          <div class="card">
+            <h3>Build insights</h3>
+            <div id="sb-insights"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Overview of your current PC build and quick-start presets.">
+  <title>Dashboard · Digital PC Builder</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="dashboard" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Dashboard</div>
+          <h1>Overview</h1>
+          <p>Your current build at a glance, quick-start presets and catalog statistics.</p>
+        </div>
+        <div class="row"><a class="btn btn-primary" href="builder.html">Continue building</a><a class="btn" href="summary.html">Summary</a></div>
+      </div>
+      <div class="grid grid-4" id="d-stats"></div>
+
+      <div class="grid grid-2" style="margin-top:18px">
+        <section class="card">
+          <div class="card-head"><h3>Current build</h3><a class="small" href="builder.html">Edit</a></div>
+          <div id="d-build"></div>
+        </section>
+        <section class="card">
+          <h3>Insights &amp; recommendations</h3>
+          <div id="d-insights"></div>
+        </section>
+      </div>
+
+      <section class="section" style="margin-top:32px">
+        <div class="section-head"><h2>Quick-start presets</h2><p>Generate a complete, compatible build for a purpose and budget using the recommendation engine, then fine-tune it.</p></div>
+        <div class="grid grid-3" id="d-presets"></div>
+      </section>
+
+      <div class="grid grid-2 section" style="margin-top:32px">
+        <section class="card">
+          <div class="card-head"><h3>Recent saved builds</h3><span class="chip" id="d-saved-count">0</span></div>
+          <div id="d-saved"></div>
+          <a class="small" href="saved-builds.html" style="display:inline-block;margin-top:10px">All saved builds</a>
+        </section>
+        <section class="card">
+          <h3>Hardware catalog</h3>
+          <p class="small muted" id="d-catalog-meta"></p>
+          <div class="chart-box" id="d-chart"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

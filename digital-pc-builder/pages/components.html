@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse, search and filter PC hardware components.">
+  <title>Component Catalog · Digital PC Builder</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="catalog" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Component Catalog</div>
+          <h1>Hardware catalog</h1>
+          <p>Browse every component with images, specifications and prices from Philippine stores. Click a part for full details, add it to your build, or tick Compare.</p>
+        </div>
+        
+      </div>
+      <div class="tabs" id="cat-tabs" role="tablist"></div>
+      <div class="card card-tight" style="margin-bottom:16px">
+        <div class="grid" style="grid-template-columns:2fr 1fr 1fr 0.7fr 0.7fr auto;align-items:end" id="catalog-filters">
+          <label class="field"><span>Search</span><input type="search" id="c-search" placeholder="e.g. Ryzen, DDR5, 16 GB, ATX"></label>
+          <label class="field"><span>Brand</span><select id="c-brand"></select></label>
+          <label class="field"><span>Sort by</span><select id="c-sort"></select></label>
+          <label class="field"><span>Min ₱</span><input type="number" id="c-min" min="0" placeholder="0"></label>
+          <label class="field"><span>Max ₱</span><input type="number" id="c-max" min="0" placeholder="Any"></label>
+          <button class="btn btn-ghost" id="c-reset">Reset</button>
+        </div>
+        <div class="row-between" style="margin-top:10px">
+          <label class="check"><input type="checkbox" id="c-fit" checked> Show compatibility with my current build</label>
+          <span class="small muted" id="catalog-count"></span>
+        </div>
+      </div>
+      <div class="part-grid" id="catalog-grid"></div>
+      <div id="catalog-pager"></div>
+
+      <div class="card hidden" id="compare-bar" style="position:sticky;bottom:16px;margin-top:18px;border-color:var(--accent);box-shadow:var(--shadow)">
+        <div class="row-between"><span id="compare-text"></span>
+          <div class="row"><button class="btn btn-ghost btn-sm" id="compare-clear">Clear</button><button class="btn btn-primary btn-sm" id="compare-go">Compare selected</button></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/catalog.js"></script>
+</body>
+</html>

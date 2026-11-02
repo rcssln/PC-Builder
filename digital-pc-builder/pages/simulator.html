@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Estimate workload performance, bottlenecks, FPS ranges and power use.">
+  <title>Performance Simulator · Digital PC Builder</title>
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="simulator" data-root="../">
+  <header id="site-header"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Performance Simulator</div>
+          <h1>Performance estimation</h1>
+          <p>Choose a workload to estimate performance, utilization, bottlenecks and power. All values are approximations from a documented model, not measured benchmarks.</p>
+        </div>
+        
+      </div>
+      <section class="card" style="margin-bottom:18px">
+        <div class="grid" style="grid-template-columns:1fr 1fr 0.8fr;align-items:end">
+          <label class="field"><span>Build</span><select id="sim-a"><option value="current">Current build</option></select></label>
+          <label class="field"><span>Compare with</span><select id="sim-b"><option value="">No comparison</option></select></label>
+          <label class="field" id="sim-res-field"><span>Resolution</span><select id="sim-res"></select></label>
+        </div>
+        <div style="margin-top:14px"><div class="segmented" id="sim-workload" role="group" aria-label="Workload"></div></div>
+        <p class="small muted" id="sim-desc" style="margin:10px 0 0"></p>
+      </section>
+      <div id="sim-results"></div>
+      <div class="grid grid-2" style="margin-top:18px">
+        <section class="card"><div class="card-head"><h3>Score by workload</h3><span class="tag-estimate">Estimate</span></div><div class="chart-box" id="chart-workloads"></div></section>
+        <section class="card"><div class="card-head"><h3>AAA FPS by resolution</h3><span class="tag-estimate">Estimate</span></div><div class="chart-box" id="chart-fps"></div></section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/performance.js"></script>
+  <script src="../js/compatibility.js"></script>
+  <script src="../js/recommendations.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/simulator.js"></script>
+</body>
+</html>
