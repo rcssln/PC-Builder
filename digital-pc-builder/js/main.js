@@ -116,6 +116,86 @@ window.PCB = window.PCB || {};
 
   /* ---------- Component specifications (display helpers) ---------- */
 
+  /**
+   * Beginner-friendly description of a component, written from its specs
+   * (so it always matches the data shown in the spec table).
+   */
+  PCB.describe = function (item) {
+    var s = item.specs, t = [];
+    var a = function (word) { return (/^[aeiou8]|^11|^18/i.test(String(word)) ? 'An ' : 'A ') + word; };
+    switch (item.category) {
+      case 'cpu':
+        t.push(a(s.cores + '-core, ') + s.threads + '-thread ' + item.brand + ' processor (' + s.generation + ') for ' + s.socket + ' motherboards.');
+        if (s.gamingIndex >= 90) t.push('One of the fastest gaming processors in this catalog.');
+        else if (s.multiCoreIndex >= 75) t.push('Strong at rendering, video exports and compiling code, where many cores help.');
+        else if (s.gamingIndex >= 75) t.push('A solid choice for gaming and everyday work.');
+        else t.push('Suited to everyday use and entry-level gaming.');
+        t.push(s.memoryTypes.length > 1 ? 'Works with DDR4 or DDR5 memory, depending on the motherboard you pick.' : 'Works with ' + s.memoryTypes[0] + ' memory only.');
+        t.push(s.integratedGraphics ? 'Has built-in graphics, so it can run a monitor without a graphics card.' : 'Has no built-in graphics, so you also need a graphics card.');
+        t.push(s.includesCooler ? 'A basic cooler comes in the box.' : 'No cooler in the box; buy one separately.');
+        break;
+      case 'gpu':
+        t.push(a(s.chipset) + ' graphics card with ' + s.vramGB + ' GB of ' + s.memoryType + ' video memory.');
+        if (s.performanceIndex >= 80) t.push('Built for 4K gaming and heavy 3D work.');
+        else if (s.performanceIndex >= 55) t.push('Handles 1440p gaming at high settings.');
+        else if (s.performanceIndex >= 35) t.push('Good for 1080p gaming at high settings.');
+        else t.push('An entry-level card for 1080p at medium settings and esports games.');
+        t.push('It is ' + s.lengthMm + ' mm long, so check that your case fits it. It draws up to about ' + s.tdp + ' W; a ' + s.recommendedPsu + ' W power supply is recommended.');
+        if (s.requires16Pin) t.push('Uses the newer 16-pin power connector.');
+        break;
+      case 'motherboard':
+        t.push(a(s.formFactor) + ' motherboard with the ' + s.chipset + ' chipset for ' + s.socket + ' processors.');
+        t.push('Takes ' + s.memoryType + ' memory in ' + s.memorySlots + ' slots (up to ' + s.maxMemoryGB + ' GB).');
+        t.push('Has ' + s.m2Slots + ' M.2 slot' + (s.m2Slots === 1 ? '' : 's') + ' for fast SSDs and ' + s.sataPorts + ' SATA ports for other drives.');
+        t.push(s.wifi ? 'Built-in Wi-Fi.' : 'No built-in Wi-Fi; use a cable or add a Wi-Fi card.');
+        if ((s.biosUpdateFor || []).length) t.push('Older stock may need a BIOS update before it works with ' + s.biosUpdateFor.join(' or ') + ' processors.');
+        break;
+      case 'ram':
+        t.push(a(s.capacityGB + ' GB ' + s.memoryType) + ' memory kit made of ' + s.modules + ' sticks running at ' + s.speedMHz + ' MT/s.');
+        t.push('Only fits ' + s.memoryType + ' motherboards.');
+        if (s.capacityGB >= 64) t.push('Plenty for video editing, 3D work and running several virtual machines.');
+        else if (s.capacityGB >= 32) t.push('Comfortable for gaming, programming and light video editing.');
+        else t.push('Enough for gaming and everyday use.');
+        break;
+      case 'storage':
+        if (s.type === 'NVMe SSD') {
+          t.push(a(PCB.capacity(s.capacityGB)) + ' NVMe SSD that plugs straight into an M.2 slot on the motherboard.');
+          t.push('Reads at up to ' + PCB.num(s.readMBs) + ' MB/s, so Windows, games and apps load quickly.');
+          if (s.pcieGen >= 5) t.push('Needs a PCIe Gen 5 M.2 slot to reach full speed.');
+        } else if (s.type === 'SATA SSD') {
+          t.push(a(PCB.capacity(s.capacityGB)) + ' 2.5-inch SSD that connects with a SATA cable.');
+          t.push('Much faster than a hard drive, but slower than an NVMe SSD.');
+        } else {
+          t.push(a(PCB.capacity(s.capacityGB)) + ' 3.5-inch hard drive with lots of space for files and backups.');
+          t.push('Too slow to use as the main drive for Windows; pair it with an SSD.');
+        }
+        break;
+      case 'psu':
+        t.push(a(s.wattage + ' W') + ' power supply with ' + s.efficiency + ' efficiency.');
+        t.push(s.modular === 'Fully modular' ? 'Fully modular: you only plug in the cables you need, which keeps the case tidy.'
+          : s.modular === 'Semi-modular' ? 'Semi-modular: the main cables are fixed and the rest are detachable.'
+            : 'Non-modular: all cables are attached, even the ones you do not use.');
+        if (s.formFactor === 'SFX') t.push('SFX size for small cases.');
+        if (s.native12V2x6) t.push('Includes a 16-pin cable for newer graphics cards.');
+        break;
+      case 'case':
+        t.push(a(s.type) + ' case for ' + s.supportedFormFactors.join(', ') + ' motherboards.');
+        t.push('Fits graphics cards up to ' + s.maxGpuLengthMm + ' mm long and air coolers up to ' + s.maxCoolerHeightMm + ' mm tall.');
+        t.push(s.includedFans ? 'Comes with ' + s.includedFans + ' fan' + (s.includedFans > 1 ? 's' : '') + '.' : 'No fans included; add your own for good airflow.');
+        if ((s.radiatorSupportMm || []).length) t.push('Supports liquid-cooler radiators up to ' + Math.max.apply(null, s.radiatorSupportMm) + ' mm.');
+        break;
+      case 'cooler':
+        t.push(s.type === 'Air'
+          ? 'An air cooler, ' + s.heightMm + ' mm tall, rated for about ' + s.tdpRating + ' W of heat.'
+          : a(s.radiatorMm + ' mm') + ' all-in-one liquid cooler rated for about ' + s.tdpRating + ' W of heat.');
+        t.push('Fits ' + s.sockets.join(', ') + ' sockets.');
+        t.push(s.tdpRating >= 220 ? 'Enough for high-end processors under heavy load.' : s.tdpRating >= 140 ? 'Fine for mid-range processors.' : 'Best for low-power processors.');
+        if (s.type !== 'Air') t.push('Your case needs a ' + s.radiatorMm + ' mm radiator mount.');
+        break;
+    }
+    return t.join(' ');
+  };
+
   /** Short spec chips shown on component cards. */
   PCB.keySpecs = function (item) {
     var s = item.specs;

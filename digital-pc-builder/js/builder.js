@@ -77,7 +77,7 @@ PCB.init(function () {
       }
       var img = has ? (Array.isArray(part) ? part[0] : part).image : 'assets/images/' + c.key + '.svg';
       var drives = Array.isArray(part) && has ? '<div class="slot-drives">' + part.map(function (d, i) {
-        return '<div class="drive-row"><span>' + esc(d.brand + ' ' + d.name) + '</span><button class="icon-btn icon-btn-sm" data-remove-drive="' + i + '" aria-label="Remove ' + esc(d.name) + '">' + PCB.icon('x') + '</button></div>';
+        return '<div class="drive-row"><span data-drive="' + i + '" title="Show details">' + esc(d.brand + ' ' + d.name) + '</span><button class="icon-btn icon-btn-sm" data-remove-drive="' + i + '" aria-label="Remove ' + esc(d.name) + '">' + PCB.icon('x') + '</button></div>';
       }).join('') + '</div>' : '';
       return '<div class="slot' + (has ? '' : ' empty') + (c.key === activeCat ? ' active' : '') + '" data-cat="' + c.key + '" tabindex="0" role="button" aria-label="' + esc(c.full) + '">' +
         '<div class="slot-img"><img src="' + esc(PCB.url(img)) + '" alt=""></div>' +
@@ -104,13 +104,43 @@ PCB.init(function () {
       PCB.toast('Drive removed.');
       return;
     }
+    var drive = e.target.closest('[data-drive]');
+    if (drive) {
+      e.stopPropagation();
+      showSelected('storage', Number(drive.getAttribute('data-drive')));
+      return;
+    }
     var slot = e.target.closest('.slot');
-    if (slot) setActive(slot.getAttribute('data-cat'));
+    if (slot) openSlot(slot.getAttribute('data-cat'));
   });
   el.slots.addEventListener('keydown', function (e) {
     var slot = e.target.closest('.slot');
-    if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setActive(slot.getAttribute('data-cat')); }
+    if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openSlot(slot.getAttribute('data-cat')); }
   });
+
+  /** Filled slot: show the selected part's details. Empty slot (or storage): open the picker. */
+  function openSlot(cat) {
+    var part = PCB.store.part(PCB.store.getBuild(), cat);
+    if (part && !Array.isArray(part)) showSelected(cat);
+    else setActive(cat);
+  }
+
+  /** Details of a part already in the build, with options to change or remove it. */
+  function showSelected(cat, driveIndex) {
+    var part = PCB.store.part(PCB.store.getBuild(), cat);
+    var item = Array.isArray(part) ? part[driveIndex] : part;
+    if (!item) return;
+    PCB.ui.showDetails(item, {
+      actions: [
+        { label: 'Close', cls: 'btn-ghost' },
+        { label: Array.isArray(part) ? 'Remove drive' : 'Remove', cls: 'btn-danger', onClick: function () {
+          PCB.store.removePart(cat, driveIndex);
+          PCB.toast(item.name + ' removed.');
+        } },
+        { label: Array.isArray(part) ? 'Add another drive' : 'Change part', cls: 'btn-primary', onClick: function () { setActive(cat); } }
+      ]
+    });
+  }
 
   function setActive(cat) {
     activeCat = cat;
@@ -251,7 +281,7 @@ PCB.init(function () {
   }
   qs('#vpc').addEventListener('click', function (e) {
     var g = e.target.closest('g[data-cat]');
-    if (g) setActive(g.getAttribute('data-cat'));
+    if (g) openSlot(g.getAttribute('data-cat'));
   });
 
   /* ---------- Sidebar ---------- */

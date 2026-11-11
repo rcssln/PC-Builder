@@ -246,6 +246,44 @@
     return Math.round(p.cpu * l.cpu + p.gpu * l.gpu + rest * (workload === 'idle' ? 0.6 : 0.9));
   };
 
+  /**
+   * Rough temperature estimate under a workload (approximation).
+   * CPU: 40 C + 55 C x (heat produced / cooler rating), so a cooler working
+   * at its full rating reaches the ~95 C limit. Stock coolers count as 95 W. GPU: its own cooler is sized for the card, so 35 C + 40 C x load.
+   * Both add a few degrees for cases with poor airflow or small cases.
+   */
+  perf.temperatures = function (build, workload) {
+    var cpu = PCB.store.part(build, 'cpu'), gpu = PCB.store.part(build, 'gpu');
+    var cooler = PCB.store.part(build, 'cooler'), pcCase = PCB.store.part(build, 'case');
+    var l = LOAD[workload] || LOAD.general;
+    var airflow = 2;
+    if (pcCase) {
+      airflow = pcCase.specs.includedFans === 0 ? 5 : pcCase.specs.includedFans >= 3 ? 0 : 2;
+      if (/Mini-ITX|Small Form Factor/.test(pcCase.specs.type)) airflow += 4;
+    }
+    function rate(t, limit) {
+      if (t >= limit) return { status: 'error', text: 'Likely to throttle: it would reach its ~' + limit + ' °C safety limit and slow itself down.' };
+      if (t >= limit - 10) return { status: 'warn', text: 'Hot but within limits. Better cooling or airflow would help.' };
+      return { status: 'ok', text: 'Comfortable temperature for long sessions.' };
+    }
+    var out = { cpu: null, gpu: null };
+    if (cpu) {
+      var rating = cooler ? cooler.specs.tdpRating : (cpu.specs.includesCooler ? 95 : null);
+      if (rating === null) {
+        out.cpu = { value: null, status: 'error', text: 'No cooler selected and none comes with this CPU. It cannot run without one.' };
+      } else {
+        var heat = cpu.specs.maxPower * l.cpu;
+        var t = Math.round(40 + 55 * heat / rating + airflow);
+        out.cpu = Object.assign({ value: Math.min(t, 95), low: Math.min(t, 95) - 4, high: Math.min(t + 4, 100), cooler: cooler ? cooler.brand + ' ' + cooler.name : 'Stock cooler' }, rate(t, 95));
+      }
+    }
+    if (gpu) {
+      var g = Math.round(35 + 40 * l.gpu + airflow + (gpu.specs.tdp > 350 ? 3 : 0));
+      out.gpu = Object.assign({ value: g, low: g - 4, high: g + 4 }, rate(g, 90));
+    }
+    return out;
+  };
+
   /** Typical utilization pattern for a workload (approximation). */
   function utilization(build, workload, gaming) {
     var cpu = PCB.store.part(build, 'cpu');

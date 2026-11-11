@@ -45,6 +45,7 @@ PCB.init(function () {
       '<p class="small muted" style="margin:0">100 = reference build (' + esc(PCB.perf.REFERENCE_LABEL) + '). ' +
       (sim.valuePer10k ? 'Value: <strong class="mono">' + sim.valuePer10k + '</strong> points per \u20B110,000.' : '') + '</p>' +
       (simB && !simB.error ? '<p class="small" style="margin:6px 0 0">vs <strong>' + esc(b.name) + '</strong>: ' + diffText(sim.score, simB.score) + '</p>' : '') +
+      compatLine(a) +
       '</div></div></div>';
 
     var utilCard = '<div class="card"><div class="card-head"><h3>Utilization estimate</h3><span class="tag-estimate">Estimate</span></div>' +
@@ -89,8 +90,33 @@ PCB.init(function () {
 
     var notes = sim.notes.length ? '<div class="card" style="grid-column:1/-1"><h3>Notes</h3><ul class="small">' + sim.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>' : '';
 
-    out.innerHTML = '<div class="grid grid-2">' + scoreCard + utilCard + bottleCard + powerCard + fpsCard + notes + '</div>';
+    out.innerHTML = '<div class="grid grid-2">' + scoreCard + utilCard + bottleCard + powerCard + tempCard(a, workload) + fpsCard + notes + '</div>';
     renderCompare(a, b && simB && !simB.error ? b : null, res);
+  }
+
+  /** Compatibility badge for the simulated build, linking to the full report. */
+  function compatLine(build) {
+    var r = PCB.compat.check(build);
+    var detail = r.status === 'ok' ? 'All checks passed' : r.counts.error + ' error' + (r.counts.error === 1 ? '' : 's') + ', ' + r.counts.warn + ' warning' + (r.counts.warn === 1 ? '' : 's');
+    return '<div class="row" style="gap:8px;margin-top:8px">' + PCB.badge(r.status) + '<span class="small muted">' + esc(detail) +
+      (r.missing.length ? '; missing ' + esc(r.missing.map(function (k) { return PCB.category(k).label; }).join(', ')) : '') +
+      '</span><a class="small" href="compatibility.html' + (el.a.value && el.a.value !== 'current' ? '?build=' + encodeURIComponent(el.a.value) : '') + '">Report</a></div>';
+  }
+
+  /** Estimated CPU and GPU temperatures for the chosen workload. */
+  function tempCard(build, workload) {
+    var t = PCB.perf.temperatures(build, workload);
+    function row(label, x, note) {
+      if (!x) return '<div class="small muted" style="margin-bottom:10px">' + label + ': ' + note + '</div>';
+      if (x.value === null) return '<div class="insight insight-error" style="margin-bottom:10px"><span class="insight-icon">' + PCB.icon('x') + '</span><div><strong>' + label + ':</strong> ' + esc(x.text) + '</div></div>';
+      var tone = x.status === 'error' ? 'error' : x.status === 'warn' ? 'warn' : 'ok';
+      return PCB.meter(label, x.value, { max: 100, tone: tone, text: '~' + x.low + '-' + x.high + ' °C' }) +
+        '<p class="tiny muted" style="margin:4px 0 12px">' + esc(x.text) + (x.cooler ? ' Cooler: ' + esc(x.cooler) + '.' : '') + '</p>';
+    }
+    return '<div class="card"><div class="card-head"><h3>Temperatures</h3><span class="tag-estimate">Estimate</span></div>' +
+      row('CPU', t.cpu, 'select a CPU') +
+      row('GPU', t.gpu, 'no graphics card (integrated graphics share the CPU cooler)') +
+      '<p class="tiny muted" style="margin:0">Based on heat output vs. cooler rating and case airflow, at about 25 °C room temperature. Real temperatures depend on fan curves, room temperature and thermal paste.</p></div>';
   }
 
   function diffText(a, b) {

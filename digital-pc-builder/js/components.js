@@ -187,6 +187,7 @@
       '<div>' + PCB.badge(cc.status, cc.status === 'ok' ? 'Fits current build' : null) + '</div>' +
       '<div class="small muted">Performance points: <strong class="mono">' + PCB.perf.componentScore(item) + '</strong></div></div></div>' +
       '<div><div class="eyebrow">' + PCB.esc(PCB.category(item.category).full) + ' · ' + PCB.esc(item.brand) + (item.release ? ' · ' + item.release : '') + '</div>' +
+      '<h4 style="margin:6px 0 4px">What it is</h4><p class="small" style="margin:0 0 12px">' + PCB.esc(PCB.describe(item)) + '</p>' +
       '<table class="spec-table"><tbody>' + PCB.specRows(item).map(function (r) {
         return '<tr><th>' + PCB.esc(r[0]) + '</th><td>' + PCB.esc(r[1]) + '</td></tr>';
       }).join('') + '</tbody></table>' +
@@ -195,8 +196,8 @@
       (checks.length ? ui.checksHtml(checks) : '<p class="small muted">No related parts selected yet, so there is nothing to check against.</p>') +
       '</div></div>';
 
-    var actions = [{ label: 'Close', cls: 'btn-ghost' }];
-    if (opts.onAdd) {
+    var actions = opts.actions || [{ label: 'Close', cls: 'btn-ghost' }];
+    if (!opts.actions && opts.onAdd) {
       actions.push({ label: opts.addLabel || 'Add to build', cls: 'btn-primary', onClick: function () { opts.onAdd(item); } });
     }
     PCB.modal({ title: item.brand + ' ' + item.name, body: body, wide: true, actions: actions });

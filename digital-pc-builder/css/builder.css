@@ -109,3 +109,5 @@
 
 .autofill-log { font-size: 0.86rem; padding-left: 18px; }
 .autofill-log li + li { margin-top: 6px; }
+.drive-row [data-drive] { cursor: pointer; }
+.drive-row [data-drive]:hover { color: var(--accent); text-decoration: underline; }
